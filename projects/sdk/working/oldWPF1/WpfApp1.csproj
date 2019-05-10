@@ -94,5 +94,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <ReferencesToSkipGraphIsolationConstraintsOn>$(MSBuildProjectDirectory)\$(MSBuildProjectName)*.csproj</ReferencesToSkipGraphIsolationConstraintsOn>
+  </PropertyGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
