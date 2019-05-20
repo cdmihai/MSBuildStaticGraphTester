@@ -1,8 +1,5 @@
 Set-StrictMode -Version Latest
 
-$InformationPreference = "Continue"
-$DebugPreference = "Continue"
-
 function Combine
 {
     [string[]] $argsAsStrings = $args
@@ -88,12 +85,56 @@ function CloneOrUpdateRepo([string]$address, [string] $location, [string] $repoP
     }
 }
 
-function ExitOnFailure
+function VariableIsDeclared([string] $aVariable)
 {
+    if (Get-Variable -Name $aVariable -ErrorAction SilentlyContinue)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+function PrintStackTrace(){
+    foreach($line in (Get-PSCallStack))
+    {
+        Write-Information $line
+    }
+}
+
+function IsFailure
+{
+    if ((VariableIsDeclared "LastExitCode") -and ($LastExitCode -ne 0))
+    {
+        return $true
+    }
+
     if (-Not ($?))
     {
-        exit
+        return $true
     }
+}
+
+function ExitOnFailureWithMessage([string] $message = $null)
+{
+    if (IsFailure)
+    {
+        if ($message -ne $null)
+        {
+            Write-Debug "$message"
+        }
+
+        PrintStackTrace
+
+        throw
+    }
+}
+
+function ExitOnFailure()
+{
+    ExitOnFailureWithMessage "Command failed"
 }
 
 function ExecuteAndExitOnFailure([string] $command, [bool] $captureOutput = $false)
@@ -179,9 +220,21 @@ function RunProjectSetupIfPresent([string]$projectRoot, [PSCustomObject]$repoInf
 
         Write-Information "Running setup script $setupScript"
         & $setupScript -repoDirectory $projectDir -solutionFile $repoInfo.SolutionFile
+
+        ExitOnFailure
     }
 }
 
-$repoPath = [System.IO.Path]::GetFullPath((Combine $PSScriptRoot ".."))
-$projectsDirectory = Combine $repoPath "projects"
-$sourceDirectory = Combine $repoPath "src"
+if(-not (VariableIsDeclared "commonInitialized"))
+{
+    # some invocations don't reset this, so a failed script run would be picked up by the next via LastExitCode
+    $LastExitCode = 0
+
+    $InformationPreference = "Continue"
+    $DebugPreference = "Continue"
+    $repoPath = [System.IO.Path]::GetFullPath((Combine $PSScriptRoot ".."))
+    $projectsDirectory = Combine $repoPath "projects"
+    $sourceDirectory = Combine $repoPath "src"
+
+    $commonInitialized = "initialized"
+}
