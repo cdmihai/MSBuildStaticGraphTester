@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GraphGen
+namespace CommonUtilities
 {
     public static class EnumerableExtensions
     {
@@ -16,7 +16,7 @@ namespace GraphGen
                 yield return enumerator.Current;
             }
         }
-
+        
         public static IEnumerable ToEnumerable(this IEnumerator enumerator)
         {
             while (enumerator.MoveNext())

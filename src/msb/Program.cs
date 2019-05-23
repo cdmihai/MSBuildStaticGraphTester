@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
+using CommonUtilities;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
