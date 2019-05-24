@@ -19,7 +19,7 @@ if (-not $Repos)
 
 function BuildMSBuildRepo([string]$MSBuildRepo)
 {
-    & "$MSBuildRepo\eng\common\build.ps1" -build -restore -ci -pack -configuration $Configuration /p:CreateBootstrap=true /p:ApplyPartialNgenOptimization=false
+    & "$MSBuildRepo\eng\common\build.ps1" -build -restore -ci -pack -configuration $Configuration /p:CreateBootstrap=true /p:ApplyPartialNgenOptimization=false /clp:v=diagnostic
     # & "$MSBuildRepo\eng\common\build.ps1" -build -restore -configuration $Configuration /p:CreateBootstrap=true
     # & "$MSBuildRepo\eng\common\build.ps1" -ci -pack -configuration $Configuration /p:ApplyPartialNgenOptimization=false
     ExitOnFailure
