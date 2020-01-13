@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\dep2\dep2.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard1.6</TargetFrameworks>
+  </PropertyGroup>
+
+</Project>
